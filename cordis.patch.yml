@@ -1,0 +1,63 @@
+# dsh-plugin-clawchat 的 bundle patch
+#
+# 只插入**一行**：本插件自己。
+#
+# 为什么不需要别的：本插件不依赖任何 DSH 服务（不注册工具、不开路由），
+# 它只是一个自持的 ClawChat 通道 —— 连上、收消息、spawn 一个 headless 轮次、
+# 把回复发回去。所以它不需要 tools / webServer 之类的注入。
+#
+# ── 单持有者 ────────────────────────────────────────────────────────────────
+# 一条 ClawChat 身份只允许一个活跃连接。如果本机已经有别的持有者（例如
+# launchd 常驻桥接、另一个 dsh 实例、旧版插件的残留进程），本插件会**保持
+# 待命不连接**，并把持有者写进日志 —— 两个持有者会互相驱逐（close 4001），
+# 而且不会自己收敛。想强行接管就设 takeover: true。
+#
+# ── 改配置 ──────────────────────────────────────────────────────────────────
+# 不要改这个文件；在你**自己 profile** 的 cordis.patch.yml 里按 id 覆盖：
+#
+#   - id: clawchat
+#     config:
+#       command: '/absolute/path/to/dsh'
+#       cwd: '/absolute/path/to/workspace'
+
+- insert:
+    - id: clawchat
+      name: 'dsh-plugin-clawchat'
+      config:
+        enabled: true
+
+        # 身份状态（含 token，按密钥对待）
+        stateFile: '~/.clawchat/state.json'
+
+        # 单持有者锁 —— 本机所有持有者必须用同一个路径才有效
+        lockFile: '~/.clawchat/holder.lock'
+        takeover: false
+
+        # 通道名，参与 WS device_id 的推导，改了会被服务器当成新设备
+        channel: 'dsh-clawchat'
+
+        # REST 的 X-Device-Id。**必须与配对时逐字节一致**，否则刷新返回 10003
+        # （与"凭据被吊销"同码同一句话）。若这条身份原本是 ClawChat 桌面 App
+        # 配对的，这里要填 App 用的那个常量值。
+        restDeviceId: ''
+
+        # 首次配对用；拿到 token 后请删掉（码是一次性的，留着会诱发重复配对）
+        connectCode: ''
+
+        # 跑一轮的命令：prompt 从 stdin 进，回复从 stdout 出
+        # （dsh 自用就是 headless；换 Claude Code 就是 claude -p，等等）
+        command: 'dsh'
+        args: ['--profile', 'headless']
+        cwd: ''
+        turnTimeoutMs: 600000
+
+        # 首次配对成功后发一次的问候；空串 = 不发
+        greeting: "你好！我已经上线了。"
+
+        # 滚动对话记录。出厂 headless profile 不支持 --resume，
+        # 没有这个的话每轮都是全新会话（会记不住上文、也更慢）。
+        # 设为 0 可关闭。
+        historyMaxTurns: 12
+        historyMaxChars: 6000
+
+        logFile: '~/.clawchat/channel.log'

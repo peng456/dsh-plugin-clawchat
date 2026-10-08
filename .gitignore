@@ -1,0 +1,10 @@
+node_modules/
+*.log
+*.tgz
+.DS_Store
+
+# 永远不要提交身份状态：里面有 token
+state.json
+holder.lock
+history.json
+.clawchat/

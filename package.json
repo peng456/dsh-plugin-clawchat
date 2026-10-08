@@ -1,0 +1,62 @@
+{
+  "name": "dsh-plugin-clawchat",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "ClawChat agent-side channel for DeepSeek Harness: holds the connection itself (no ClawChat desktop app required) and answers each owner message with one headless turn.",
+  "license": "MIT",
+  "author": "peng456",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "clawchat",
+    "chat",
+    "websocket",
+    "channel",
+    "agent"
+  ],
+  "homepage": "https://github.com/peng456/dsh-plugin-clawchat#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/peng456/dsh-plugin-clawchat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/peng456/dsh-plugin-clawchat/issues"
+  },
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./protocol": "./lib/protocol.js",
+    "./lock": "./lib/lock.js",
+    "./runner": "./lib/runner.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node test/selftest.mjs",
+    "check": "node --check lib/index.js && node --check lib/protocol.js && node --check lib/lock.js && node --check lib/runner.js"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/schemastery": "*"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/schemastery": { "optional": true }
+  },
+  "devDependencies": {
+    "@deepseek-ai/schemastery": "^3.18.4"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
