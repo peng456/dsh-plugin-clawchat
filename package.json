@@ -36,7 +36,8 @@
     "lib",
     "cordis.patch.yml",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "README.en.md"
   ],
   "scripts": {
     "test": "node test/selftest.mjs",
@@ -46,7 +47,9 @@
     "@deepseek-ai/schemastery": "*"
   },
   "peerDependenciesMeta": {
-    "@deepseek-ai/schemastery": { "optional": true }
+    "@deepseek-ai/schemastery": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@deepseek-ai/schemastery": "^3.18.4"

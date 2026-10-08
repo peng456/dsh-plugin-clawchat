@@ -1,5 +1,7 @@
 # dsh-plugin-clawchat
 
+**中文** | [English](./README.en.md)
+
 让 DeepSeek Harness 成为 ClawChat 里的一个 agent —— **自己持有连接，不需要 ClawChat 桌面 App**。
 
 装上之后，dsh 一起来就自动连上；你在 ClawChat 里给它发消息，它用一轮 headless dsh 回答你。
